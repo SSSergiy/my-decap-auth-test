@@ -1,10 +1,9 @@
 backend:
   name: github
-  repo: "SSSergiy/my-cool-website"
+  repo: SSSergiy/my-decap-auth-test
   branch: main
-  site_domain: "my-cool-website-a6g.pages.dev"
-  base_url: "https://serhii-niekritov-enginer.online"
-  use_graphql: true
+  base_url: https://my-decap-auth-test.pages.dev
+  auth_endpoint: /api/auth0-login
 
 media_folder: "static/images/uploads"
 public_folder: "/images/uploads"
