@@ -1,5 +1,4 @@
 // /functions/api/auth0-callback.js
-import { sign } from '@tsndr/cloudflare-worker-jwt';
 
 export async function onRequest(context) {
   const { request, env } = context;
@@ -10,7 +9,7 @@ export async function onRequest(context) {
     return new Response('Missing code parameter', { status: 400 });
   }
 
-  // 1. Обмениваем код авторизации на Access Token от Auth0
+  // 1. Обмениваем код на токен доступа от Auth0
   const tokenResponse = await fetch(`https://${env.AUTH0_DOMAIN}/oauth/token`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -25,24 +24,29 @@ export async function onRequest(context) {
 
   const tokenData = await tokenResponse.json();
   if (!tokenData.access_token) {
-    return new Response('Failed to fetch access token', { status: 500 });
+    console.error("Auth0 Token Error:", JSON.stringify(tokenData));
+    return new Response('Failed to fetch access token from Auth0', { status: 500 });
   }
 
-  // 2. Получаем профиль пользователя от Auth0
+  // 2. Используем токен Auth0, чтобы получить профиль пользователя
   const userResponse = await fetch(`https://${env.AUTH0_DOMAIN}/userinfo`, {
     headers: { Authorization: `Bearer ${tokenData.access_token}` },
   });
   const userData = await userResponse.json();
 
-  // 3. Генерируем наш собственный JWT для Decap CMS, подписанный нашим секретом
-  const decapCmsToken = await sign({
-      email: userData.email,
-      name: userData.name,
-    },
-    env.JWT_SECRET
+  // 3. ИЩЕМ НАСТОЯЩИЙ GITHUB TOKEN ВНУТРИ ПРОФИЛЯ AUTH0
+  const githubIdentity = userData.identities && userData.identities.find(
+    (identity) => identity.provider === 'github'
   );
 
-  // 4. Возвращаем HTML, который передаст наш токен в Decap CMS
+  if (!githubIdentity || !githubIdentity.access_token) {
+    console.error("GitHub Identity or Token not found in user profile:", JSON.stringify(userData));
+    return new Response('GitHub token not found in Auth0 user profile. Did you add "repo" scope?', { status: 500 });
+  }
+
+  const githubAccessToken = githubIdentity.access_token;
+
+  // 4. Возвращаем HTML, который передаст НАСТОЯЩИЙ токен GitHub в Decap CMS
   const html = `
     <!DOCTYPE html>
     <html>
@@ -50,17 +54,12 @@ export async function onRequest(context) {
       <body>
         <script>
           (function() {
-            const opener = window.opener;
-            if (opener) {
-              opener.postMessage(
-                'authorization:github:success:${JSON.stringify({
-                  provider: "github",
-                  token: "${decapCmsToken}"
-                })}',
-                '${url.origin}'
-              );
-              window.close();
-            }
+            const data = {
+              token: "${githubAccessToken}", // <-- Передаем настоящий токен
+              provider: "github"
+            };
+            window.opener.postMessage("authorization:github:success:" + JSON.stringify(data), window.location.origin);
+            window.close();
           })();
         </script>
         <p>Authorized! Closing this window...</p>
