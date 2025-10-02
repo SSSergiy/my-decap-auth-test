@@ -1,0 +1,23 @@
+backend:
+  name: github
+  repo: "SSSergiy/my-cool-website"
+  branch: main
+  site_domain: "my-cool-website-a6g.pages.dev"
+  base_url: "https://serhii-niekritov-enginer.online"
+  use_graphql: true
+
+media_folder: "static/images/uploads"
+public_folder: "/images/uploads"
+
+collections:
+  - name: "post"
+    label: "Посты"
+    folder: "content/english/blog"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - { label: "Заголовок", name: "title", widget: "string" }
+      - { label: "Дата публикации", name: "date", widget: "datetime" }
+      - { label: "Изображение", name: "image", widget: "image", required: false }
+      - { label: "Авторы", name: "authors", widget: "list", required: false }
+      - { label: "Текст поста", name: "body", widget: "markdown" }
