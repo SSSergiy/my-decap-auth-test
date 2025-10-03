@@ -2,6 +2,7 @@ backend:
   name: proxy
   proxy_url: https://my-decap-auth-test.pages.dev/api/proxy
   branch: main
+  auth_endpoint: /api/auth0-login
 
 media_folder: "static/images/uploads"
 public_folder: "/images/uploads"
