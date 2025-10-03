@@ -4,8 +4,6 @@
 
 [build.environment]
   HUGO_VERSION = "0.118.2"
-  # GO_VERSION нам не нужен, можно убрать
 
-[functions]
+[[functions]]
   directory = "netlify/functions/"
-  node_bundler = "esbuild"
