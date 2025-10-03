@@ -1,6 +1,6 @@
 backend:
   name: proxy
-  proxy_url: "/.netlify/functions/proxy"
+  proxy_url: "https://my-decap-auth-test.netlify.app/.netlify/functions/proxy"
   branch: main
   auth_type: "pkce"
   auth_endpoint: "https://dev-l1aq3z2mpam3n6yn.us.auth0.com/authorize"
