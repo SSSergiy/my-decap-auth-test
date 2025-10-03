@@ -1,9 +1,10 @@
-local_backend: true
-
 backend:
   name: proxy
   proxy_url: https://my-decap-auth-test.pages.dev/api/proxy
   branch: main
+  auth_type: "pkce"
+  auth_endpoint: "https://YOUR_AUTH0_DOMAIN/authorize"
+  app_id: "YOUR_AUTH0_CLIENT_ID"
 
 media_folder: "static/images/uploads"
 public_folder: "/images/uploads"
