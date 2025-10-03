@@ -1,9 +1,7 @@
 backend:
-  name: github
-  repo: SSSergiy/my-decap-auth-test
+  name: proxy
+  proxy_url: https://my-decap-auth-test.pages.dev/api/proxy
   branch: main
-  base_url: https://my-decap-auth-test.pages.dev
-  auth_endpoint: /api/auth0-login
 
 media_folder: "static/images/uploads"
 public_folder: "/images/uploads"
