@@ -3,8 +3,8 @@ backend:
   proxy_url: https://my-decap-auth-test.pages.dev/api/proxy
   branch: main
   auth_type: "pkce"
-  auth_endpoint: "https://YOUR_AUTH0_DOMAIN/authorize"
-  app_id: "YOUR_AUTH0_CLIENT_ID"
+  auth_endpoint: "https://dev-l1aq3z2mpam3n6yn.us.auth0.com/authorize"
+  app_id: "hSrFGcDh0XR0RyZQ4fCYhHZ12W1tmCid"
 
 media_folder: "static/images/uploads"
 public_folder: "/images/uploads"
